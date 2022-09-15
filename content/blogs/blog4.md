@@ -11,5 +11,7 @@ draft: false
 image: pic07.jpg
 keywords: ""
 slug: aliquam
-title: Aliquam
+title: About me
 ---
+
+Hello, I am Aneeka Agarwal. I have been born and brought up in Mumbai, India. 

@@ -8,15 +8,14 @@ params:
   banner:
     buttonText: Get Started
     subtitle: |-
-      # A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-      # AND RELEASED UNDER THE CREATIVE COMMONS.
+      This is where you get to know a little bit
     title: Hi, my name is Aneeka
   blog: {}
   contact:
     address:
-      - city: London,  00000
+      - city: London, NW88TE
         country: UK
-        street: Lilestone Street
+        street: Hardwick House, Lilestone Street
         title: Address
     buttonClear: Clear
     buttonSend: Send message
@@ -25,7 +24,7 @@ params:
         title: Email
     enable: yes
     phone:
-      - phone: (+44) 7446843787 x1234
+      - phone: (+44) 7446843787
         title: Phone
   custom_css: []
   custom_js: []
@@ -54,9 +53,9 @@ params:
       # - icon: fa-github
       #   label: GitHub
       #   url: https://www.github.com
-      # - icon: fa-linkedin
-      #   label: LinkedIn
-      #   url: https://www.linkedin.com
+      - icon: fa-linkedin
+        label: LinkedIn
+        url: www.linkedin.com/in/aneeka-agarwal
   image: ''
   name: Aneeka
   navigation:
@@ -82,20 +81,20 @@ params:
     enable: yes
     showcase:
       - image: pic01.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Aliquam
+        subtitle:
+        title: About me
         url: blogs/aliquam
       - image: pic02.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Tempus
+        subtitle:
+        title: My CV
         url: blogs/tempus
       - image: pic03.jpg
-        subtitle: Lorem Etiam Nullam
-        title: Magna
+        subtitle:
+        title: My paintings
         url: blogs/magna
       - image: pic04.jpg
-        subtitle: Nisl Sed Aliquam
-        title: Ipsum
+        subtitle:
+        title: TFL Bike Data
         url: blogs/ipsum
       - image: pic05.jpg
         subtitle: Ipsum Dolor Sit Amet
@@ -108,11 +107,11 @@ params:
   two:
     buttonText: Get Started
     enable: yes
-    subtitle: "Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero.
-      \n    Mauris aliquet magna magna sed nunc rhoncus pharetra. \n    Pellentesque
-      condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia
-      pellentesque lorem ipsum dolor. \n    Nullam et orci eu lorem consequat tincidunt.
-      Vivamus et sagittis libero.\n    Mauris aliquet magna magna sed nunc rhoncus
-      amet pharetra et feugiat tempus."
+    #subtitle: "Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero.
+    #   \n    Mauris aliquet magna magna sed nunc rhoncus pharetra. \n    Pellentesque
+    #   condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia
+    #   pellentesque lorem ipsum dolor. \n    Nullam et orci eu lorem consequat tincidunt.
+    #   Vivamus et sagittis libero.\n    Mauris aliquet magna magna sed nunc rhoncus
+    #   amet pharetra et feugiat tempus."
     title: Massa libero
     url: blogs

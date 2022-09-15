@@ -1,0 +1,76 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:26:09-05:00"
+description: Lorem Etiam Nullam
+draft: false
+# image: pic09.jpg
+keywords: ""
+slug: magna
+title: Biden's Approval Margins
+---
+```{r load-libraries, echo=FALSE, results='hide', include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+library(wbstats)
+library(countrycode)
+library(patchwork)
+library(gganimate)
+library(scales)
+library(infer)
+library(wbstats)
+```
+
+```{r, cache=TRUE}
+# Import approval polls data directly off fivethirtyeight website
+approval_polllist <- read_csv('https://projects.fivethirtyeight.com/biden-approval-data/approval_polllist.csv') 
+
+# Use `lubridate` to fix dates, as they are given as characters.
+
+approval_polllist_date <- approval_polllist %>% 
+  mutate(startdate = mdy(startdate), enddate = mdy(enddate))
+
+```
+
+Plot of the net approval of Biden for each week in 2022, along with its
+95% confidence interval. There are various dates given for each poll, we
+have used the enddate.
+```{r trump_margins, echo=FALSE}
+
+approval_polllist_date <- approval_polllist %>% 
+  mutate(startdate = mdy(startdate), enddate = mdy(enddate))
+
+
+by_week <- approval_polllist_date %>% 
+  filter(year(enddate)=='2022') %>% 
+  mutate(week = week(enddate)) %>%
+  mutate(net_approval = approve-disapprove) %>% 
+  group_by(week, subgroup) %>%
+  summarise(mean_net_approval = mean(net_approval), 
+              sd_net_approval = sd(net_approval), 
+              count = n(), 
+              z_score = qnorm(0.975), 
+              se_net_approval = sd_net_approval/sqrt(count), 
+              margin_of_error = z_score * se_net_approval,
+              low_net_approval = mean_net_approval - margin_of_error,
+              high_net_approval = mean_net_approval + margin_of_error)
+ 
+  by_week %>%  
+  ggplot(aes( x = week, y = mean_net_approval, colour= subgroup, fill=subgroup))+
+    geom_ribbon(aes(ymin = low_net_approval, ymax = high_net_approval), alpha=0.1) +
+    geom_line() +
+    facet_grid(vars(subgroup)) + theme_light() +
+    theme(legend.position = "none")+
+    labs(title = "Biden's Net Approval Ratings in 2022", subtitle = "Weekly Data, Approve - Disapprove, %",
+         y = NULL, x= 'Week in 2022')
+    
+```

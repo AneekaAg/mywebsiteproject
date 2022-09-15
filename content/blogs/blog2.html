@@ -1,0 +1,36 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:26:09-05:00"
+description: Lorem Etiam Nullam
+draft: false
+# image: pic09.jpg
+keywords: ""
+slug: magna
+title: Biden's Approval Margins
+---
+
+
+
+<pre class="r"><code># Import approval polls data directly off fivethirtyeight website
+approval_polllist &lt;- read_csv(&#39;https://projects.fivethirtyeight.com/biden-approval-data/approval_polllist.csv&#39;) </code></pre>
+<pre><code>## Rows: 4559 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (12): president, subgroup, modeldate, startdate, enddate, pollster, grad...
+## dbl  (9): samplesize, weight, influence, approve, disapprove, adjusted_appro...
+## lgl  (1): tracking
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># Use `lubridate` to fix dates, as they are given as characters.
+
+approval_polllist_date &lt;- approval_polllist %&gt;% 
+  mutate(startdate = mdy(startdate), enddate = mdy(enddate))</code></pre>
+<p>Plot of the net approval of Biden for each week in 2022, along with its
+95% confidence interval. There are various dates given for each poll, we
+have used the enddate.</p>
+<pre><code>## `summarise()` has grouped output by &#39;week&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="/blogs/blog2_files/figure-html/trump_margins-1.png" width="672" /></p>

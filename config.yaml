@@ -8,7 +8,7 @@ params:
   banner:
     buttonText: Get Started
     subtitle: |-
-      This is where you get to know a little bit
+      This is where you get to know me a little bit
     title: Hi, my name is Aneeka
   blog: {}
   contact:
@@ -90,20 +90,20 @@ params:
         url: blogs/tempus
       - image: pic03.jpg
         subtitle:
-        title: My paintings
+        title: Biden's Approval Margins
         url: blogs/magna
-      - image: pic04.jpg
-        subtitle:
-        title: TFL Bike Data
-        url: blogs/ipsum
+      # - image: pic04.jpg
+      #   subtitle:
+      #   title: TFL Bike Data
+      #   url: blogs/ipsum
       - image: pic05.jpg
-        subtitle: Ipsum Dolor Sit Amet
+        subtitle:
         title: Youth Risk Behaviour Surveillance 
         url: blogs/ipsum
-      - image: pic06.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Etiam
-        url: blogs/ipsum
+      # - image: pic06.jpg
+      #   subtitle:
+      #   title: Omega group Plc- Pay Discrimination
+      #   url: blogs/ipsum
   two:
     buttonText: Get Started
     enable: yes

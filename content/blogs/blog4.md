@@ -26,7 +26,7 @@ Business School.
 
 Some of my favourite activities include:
 
-\- Painting 
+\- Painting (The above image is a canvas paining I made with my mom)
 
 \- Dancing 
 

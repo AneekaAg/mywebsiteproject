@@ -34,8 +34,8 @@ params:
     text: Please visit [this page](/)
   favicon: favicon.ico
   footer:
-    # copyright: Company Name
-    # enable: yes
+    copyright: Aneeka Agarwal
+    enable: yes
     # quicklinks:
     #   - alt: HTML5 UP
     #     text: 'Design: '
@@ -44,15 +44,15 @@ params:
       # - icon: fa-twitter
       #   label: Twitter
       #   url: https://www.twitter.com
-      - icon: fa-facebook
-        label: Facebook
-        url: facebook.com/aneeka.agarwal
-      - icon: fa-instagram
-        label: Instagram
-        url: https://www.instagram.com
-      # - icon: fa-github
-      #   label: GitHub
-      #   url: https://www.github.com
+      # - icon: fa-facebook
+      #   label: Facebook
+      #   url: facebook.com/aneeka.agarwal
+      # - icon: fa-instagram
+      #   label: Instagram
+      #   url: https://www.instagram.com
+      - icon: fa-github
+        label: GitHub
+        url: https://github.com/AneekaAg
       - icon: fa-linkedin
         label: LinkedIn
         url: www.linkedin.com/in/aneeka-agarwal
@@ -84,7 +84,7 @@ params:
         subtitle:
         title: About me
         url: blogs/aliquam
-      - image: pic02.jpg
+      - image: mycv.jpg
         subtitle:
         title: My CV
         url: blogs/tempus

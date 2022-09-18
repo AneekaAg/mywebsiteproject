@@ -84,11 +84,11 @@ params:
         subtitle:
         title: About me
         url: blogs/aliquam
-      - image: mycv.jpg
+      - image: mycv.jpeg
         subtitle:
         title: My CV
         url: blogs/tempus
-      - image: pic03.jpg
+      - image: biden.jpeg
         subtitle:
         title: Biden's Approval Margins
         url: blogs/magna
@@ -96,7 +96,7 @@ params:
       #   subtitle:
       #   title: TFL Bike Data
       #   url: blogs/ipsum
-      - image: pic05.jpg
+      - image: youth.jpeg
         subtitle:
         title: Youth Risk Behaviour Surveillance 
         url: blogs/ipsum

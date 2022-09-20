@@ -92,10 +92,10 @@ params:
         subtitle:
         title: Biden's Approval Margins
         url: blogs/magna
-      # - image: pic04.jpg
-      #   subtitle:
-      #   title: TFL Bike Data
-      #   url: blogs/ipsum
+      - image: pic04.jpg
+        subtitle:
+        title: Climate change and temperature anomalies
+        url: blogs/climate
       - image: youth.jpeg
         subtitle:
         title: Youth Risk Behaviour Surveillance 

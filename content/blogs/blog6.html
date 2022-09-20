@@ -1,0 +1,27 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: ""
+draft: false
+#image: pic10.jpg
+keywords: ""
+slug: ipsum
+title: Youth Risk Behaviour Surveillance
+---
+
+
+
+<p>Every two years, the Centers for Disease Control and Prevention conduct the <a href="https://www.cdc.gov/healthyyouth/data/yrbs/index.htm">Youth Risk Behavior Surveillance System (YRBSS)</a> survey, where it takes data from high schoolers (9th through 12th grade), to analyze health patterns. We worked with a selected group of variables from a random sample of observations during one of the years the YRBSS was conducted.</p>
+<pre class="r"><code>data(yrbss)</code></pre>
+<pre class="r"><code>ggplot(yrbss,aes(x= weight)) + geom_histogram()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 1004 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/eda_on_weight-1.png" width="672" /></p>
+<pre class="r"><code>yrbss_3d &lt;- yrbss %&gt;% mutate(physical_3plus =  ifelse(physically_active_7d&gt;= 3/7, &#39;yes&#39;, &#39;no&#39;))
+yrbss_3d &lt;- na.omit(yrbss_3d)
+ggplot(yrbss_3d, aes(x = physical_3plus, y = weight)) + 
+  geom_boxplot()</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/boxplot-1.png" width="672" />
+From the boxplot we see that The proportion of students who do physical exercise less than 3 days a week seem to have higher median weight as compared the ones who don’t.</p>

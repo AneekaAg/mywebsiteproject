@@ -30,8 +30,6 @@ library(infer)
 library(wbstats)
 ```
 
-# Climate change and temperature anomalies
-
 If we wanted to study climate change, we can find data on the *Combined
 Land-Surface Air and Sea-Surface Water Temperature Anomalies* in the
 Northern Hemisphere at [NASA's Goddard Institute for Space

@@ -92,7 +92,7 @@ params:
         subtitle:
         title: Biden's Approval Margins
         url: blogs/magna
-      - image: pic04.jpg
+      - image: climatechange.jpeg
         subtitle:
         title: Climate change and temperature anomalies
         url: blogs/climate
@@ -100,7 +100,7 @@ params:
         subtitle:
         title: Youth Risk Behaviour Surveillance 
         url: blogs/ipsum
-      - image: pic06.jpg
+      - image: renewable.jpeg
         subtitle:
         title: Share of renewable energy production in the world
         url: blogs/paintings

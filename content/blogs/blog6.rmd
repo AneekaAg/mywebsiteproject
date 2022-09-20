@@ -5,47 +5,142 @@ categories:
 date: "2017-10-31T21:28:43-05:00"
 description: ""
 draft: false
-#image: pic10.jpg
+# image: pic10.jpg
 keywords: ""
-slug: ipsum
-title: Youth Risk Behaviour Surveillance
+slug: paintings
+title: Share of renewable energy production in the world
 ---
-
-Every two years, the Centers for Disease Control and Prevention conduct the [Youth Risk Behavior Surveillance System (YRBSS)](https://www.cdc.gov/healthyyouth/data/yrbs/index.htm) survey, where it takes data from high schoolers (9th through 12th grade), to analyze health patterns. We worked with a selected group of variables from a random sample of observations during one of the years the YRBSS was conducted.
-
-```{r load-libraries, echo=FALSE, results='hide', include=FALSE}
+```{r load-libraries, include=FALSE}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
 library(mosaic)
 library(ggthemes)
-library(GGally)
-library(readxl)
+library(lubridate)
 library(here)
 library(skimr)
 library(janitor)
-library(broom)
-library(tidyquant)
+library(httr)
+library(readxl)
+library(vroom)
+library(wbstats)
+library(countrycode)
+library(patchwork)
+library(gganimate)
+library(scales)
 library(infer)
-library(openintro)
-library(psych)
+library(wbstats)
 ```
 
+The National Bureau of Economic Research (NBER) has a a very interesting
+dataset on the adoption of about 200 technologies in more than 150
+countries since 1800. This is the[Cross-country Historical Adoption of
+Technology (CHAT)
+dataset](https://www.nber.org/research/data/cross-country-historical-adoption-technology).
 
-```{r}
+The following is a description of the variables
 
-data(yrbss)
+| **variable** | **class** | **description**                |
+|--------------|-----------|--------------------------------|
+| variable     | character | Variable name                  |
+| label        | character | Label for variable             |
+| iso3c        | character | Country code                   |
+| year         | double    | Year                           |
+| group        | character | Group (consumption/production) |
+| category     | character | Category                       |
+| value        | double    | Value (related to label)       |
+
+```{r,load_technology_data, results='hide'}
+
+technology <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-19/technology.csv')
+
+#get all technologies
+labels <- technology %>% 
+  distinct(variable, label)
+
+# Get country names using 'countrycode' package
+technology <- technology %>% 
+  filter(iso3c != "XCD") %>% 
+  mutate(iso3c = recode(iso3c, "ROM" = "ROU"),
+         country = countrycode(iso3c, origin = "iso3c", destination = "country.name"),
+         country = case_when(
+           iso3c == "ANT" ~ "Netherlands Antilles",
+           iso3c == "CSK" ~ "Czechoslovakia",
+           iso3c == "XKX" ~ "Kosovo",
+           TRUE           ~ country))
+
+#make smaller dataframe on energy
+energy <- technology %>% 
+  filter(category == "Energy")
+
+# download CO2 per capita from World Bank using {wbstats} package
+# https://data.worldbank.org/indicator/EN.ATM.CO2E.PC
+co2_percap <- wb_data(country = "countries_only", 
+                      indicator = "EN.ATM.CO2E.PC", 
+                      start_date = 1970, 
+                      end_date = 2022,
+                      return_wide=FALSE) %>% 
+  filter(!is.na(value)) %>% 
+  #drop unwanted variables
+  select(-c(unit, obs_status, footnote, last_updated))
+
+# get a list of countries and their characteristics
+# we just want to get the region a country is in and its income level
+countries <-  wb_cachelist$countries %>% 
+  select(iso3c,region,income_level)
 
 ```
 
+This is a very rich data set, not just for energy and CO2 data, but for
+many other technologies.
 
-```{r, eda_on_weight}
+First, we produce a graph with the countries with the highest and lowest %
+contribution of renewables in energy production. This is made up of
+`elec_hydro`, `elec_solar`, `elec_wind`, and `elec_renew_other`.
 
-ggplot(yrbss,aes(x= weight)) + geom_histogram()
+```{r min-max_renewables, echo=FALSE, out.width="100%"}
+
+energy_2019 <- energy %>% 
+  filter(year=="2019") %>% 
+  drop_na()
+
+energy_left <- energy_2019 %>%
+  mutate(energy_type = ifelse(variable %in% c("elec_hydro","elec_solar","elec_wind","elec_renew_other"),"renewables","not_renewables")) %>% 
+  select(c('variable','country','value','energy_type')) %>% 
+  filter(energy_type=="renewables") %>% 
+  group_by(country) %>% 
+  summarise(energy_renewables = sum(value))
+
+energy_right <- energy_2019 %>%
+  select(c('variable','country','value')) %>%   
+  filter(variable =="elecprod")
+
+energy_result <- merge(x=energy_left, y=energy_right, by="country", all.y=TRUE) %>% 
+  mutate_at(vars(energy_renewables), ~replace_na(.,0)) %>% 
+  mutate(renewables_pct = energy_renewables/value) %>% 
+  # drop number that seems wrong. but not sure
+  ########## Need Further Discussion ###########
+  filter(renewables_pct!=0)
+  
+energy_result_plot1 <- energy_result %>% 
+  slice_max(energy_result$renewables_pct,n = 20) %>% 
+  mutate(country = fct_reorder(country, renewables_pct, .desc = FALSE))
+  
+energy_result_plot2 <- energy_result %>% 
+  slice_min(energy_result$renewables_pct,n = 20) %>% 
+  mutate(country = fct_reorder(country, renewables_pct, .desc = FALSE))
+
+p1 <- ggplot(energy_result_plot1, aes(x = renewables_pct,y= country)) + 
+  geom_col(width = NULL)+
+  labs(x='',y='',)
+
+p2 <- ggplot(energy_result_plot2, aes(x = renewables_pct,y= country)) + 
+  geom_col(width = NULL)+
+  labs(x='',y='')
+
+patchwork::wrap_plots(p1 + p2) +
+  plot_annotation(
+  title = 'Highest and lowest % of renewables in energy production',
+  subtitle = '2019 Data',
+  caption = 'Source: NBER CHAT Database'
+  )
+
 ```
-```{r, boxplot}
-yrbss_3d <- yrbss %>% mutate(physical_3plus =  ifelse(physically_active_7d>= 3/7, 'yes', 'no'))
-yrbss_3d <- na.omit(yrbss_3d)
-ggplot(yrbss_3d, aes(x = physical_3plus, y = weight)) + 
-  geom_boxplot()
-
-```
-From the boxplot we see that The proportion of students who do physical exercise less than 3 days a week seem to have higher median weight as compared the ones who don't.

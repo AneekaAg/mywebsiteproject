@@ -5,23 +5,112 @@ categories:
 date: "2017-10-31T21:28:43-05:00"
 description: ""
 draft: false
-#image: pic10.jpg
+# image: pic10.jpg
 keywords: ""
-slug: ipsum
-title: Youth Risk Behaviour Surveillance
+slug: paintings
+title: Share of renewable energy production in the world
 ---
 
 
 
-<p>Every two years, the Centers for Disease Control and Prevention conduct the <a href="https://www.cdc.gov/healthyyouth/data/yrbs/index.htm">Youth Risk Behavior Surveillance System (YRBSS)</a> survey, where it takes data from high schoolers (9th through 12th grade), to analyze health patterns. We worked with a selected group of variables from a random sample of observations during one of the years the YRBSS was conducted.</p>
-<pre class="r"><code>data(yrbss)</code></pre>
-<pre class="r"><code>ggplot(yrbss,aes(x= weight)) + geom_histogram()</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<pre><code>## Warning: Removed 1004 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="/blogs/blog6_files/figure-html/eda_on_weight-1.png" width="672" /></p>
-<pre class="r"><code>yrbss_3d &lt;- yrbss %&gt;% mutate(physical_3plus =  ifelse(physically_active_7d&gt;= 3/7, &#39;yes&#39;, &#39;no&#39;))
-yrbss_3d &lt;- na.omit(yrbss_3d)
-ggplot(yrbss_3d, aes(x = physical_3plus, y = weight)) + 
-  geom_boxplot()</code></pre>
-<p><img src="/blogs/blog6_files/figure-html/boxplot-1.png" width="672" />
-From the boxplot we see that The proportion of students who do physical exercise less than 3 days a week seem to have higher median weight as compared the ones who don’t.</p>
+<p>The National Bureau of Economic Research (NBER) has a a very interesting
+dataset on the adoption of about 200 technologies in more than 150
+countries since 1800. This is the<a href="https://www.nber.org/research/data/cross-country-historical-adoption-technology">Cross-country Historical Adoption of
+Technology (CHAT)
+dataset</a>.</p>
+<p>The following is a description of the variables</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>variable</strong></th>
+<th><strong>class</strong></th>
+<th><strong>description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>variable</td>
+<td>character</td>
+<td>Variable name</td>
+</tr>
+<tr class="even">
+<td>label</td>
+<td>character</td>
+<td>Label for variable</td>
+</tr>
+<tr class="odd">
+<td>iso3c</td>
+<td>character</td>
+<td>Country code</td>
+</tr>
+<tr class="even">
+<td>year</td>
+<td>double</td>
+<td>Year</td>
+</tr>
+<tr class="odd">
+<td>group</td>
+<td>character</td>
+<td>Group (consumption/production)</td>
+</tr>
+<tr class="even">
+<td>category</td>
+<td>character</td>
+<td>Category</td>
+</tr>
+<tr class="odd">
+<td>value</td>
+<td>double</td>
+<td>Value (related to label)</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>technology &lt;- readr::read_csv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-19/technology.csv&#39;)</code></pre>
+<pre><code>## Rows: 491636 Columns: 7
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (5): variable, label, iso3c, group, category
+## dbl (2): year, value
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>#get all technologies
+labels &lt;- technology %&gt;% 
+  distinct(variable, label)
+
+# Get country names using &#39;countrycode&#39; package
+technology &lt;- technology %&gt;% 
+  filter(iso3c != &quot;XCD&quot;) %&gt;% 
+  mutate(iso3c = recode(iso3c, &quot;ROM&quot; = &quot;ROU&quot;),
+         country = countrycode(iso3c, origin = &quot;iso3c&quot;, destination = &quot;country.name&quot;),
+         country = case_when(
+           iso3c == &quot;ANT&quot; ~ &quot;Netherlands Antilles&quot;,
+           iso3c == &quot;CSK&quot; ~ &quot;Czechoslovakia&quot;,
+           iso3c == &quot;XKX&quot; ~ &quot;Kosovo&quot;,
+           TRUE           ~ country))</code></pre>
+<pre><code>## Warning in countrycode_convert(sourcevar = sourcevar, origin = origin, destination = dest, : Some values were not matched unambiguously: ANT, CSK, XKX</code></pre>
+<pre class="r"><code>#make smaller dataframe on energy
+energy &lt;- technology %&gt;% 
+  filter(category == &quot;Energy&quot;)
+
+# download CO2 per capita from World Bank using {wbstats} package
+# https://data.worldbank.org/indicator/EN.ATM.CO2E.PC
+co2_percap &lt;- wb_data(country = &quot;countries_only&quot;, 
+                      indicator = &quot;EN.ATM.CO2E.PC&quot;, 
+                      start_date = 1970, 
+                      end_date = 2022,
+                      return_wide=FALSE) %&gt;% 
+  filter(!is.na(value)) %&gt;% 
+  #drop unwanted variables
+  select(-c(unit, obs_status, footnote, last_updated))
+
+# get a list of countries and their characteristics
+# we just want to get the region a country is in and its income level
+countries &lt;-  wb_cachelist$countries %&gt;% 
+  select(iso3c,region,income_level)</code></pre>
+<p>This is a very rich data set, not just for energy and CO2 data, but for
+many other technologies.</p>
+<p>First, we produce a graph with the countries with the highest and lowest %
+contribution of renewables in energy production. This is made up of
+<code>elec_hydro</code>, <code>elec_solar</code>, <code>elec_wind</code>, and <code>elec_renew_other</code>.</p>
+<p><img src="/blogs/blog6_files/figure-html/min-max_renewables-1.png" width="100%" /></p>

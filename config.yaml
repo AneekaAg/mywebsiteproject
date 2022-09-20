@@ -100,10 +100,10 @@ params:
         subtitle:
         title: Youth Risk Behaviour Surveillance 
         url: blogs/ipsum
-      # - image: pic06.jpg
-      #   subtitle:
-      #   title: Omega group Plc- Pay Discrimination
-      #   url: blogs/ipsum
+      - image: pic06.jpg
+        subtitle:
+        title: Share of renewable energy production in the world
+        url: blogs/paintings
   # two:
   #   buttonText: Get Started
   #   enable: yes
